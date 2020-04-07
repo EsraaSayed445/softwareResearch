@@ -9,6 +9,7 @@ public class ManageClientsForm extends javax.swing.JFrame {
     /**
      * Creates new form ManageClientsForm
      */
+    Client client = new Client();
     public ManageClientsForm() {
         initComponents();
     }
@@ -101,13 +102,13 @@ public class ManageClientsForm extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -116,6 +117,11 @@ public class ManageClientsForm extends javax.swing.JFrame {
         ButtonADD.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         ButtonADD.setForeground(new java.awt.Color(255, 255, 255));
         ButtonADD.setText("Add New Client");
+        ButtonADD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonADDActionPerformed(evt);
+            }
+        });
 
         ButtonRemove.setBackground(new java.awt.Color(204, 0, 51));
         ButtonRemove.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -229,6 +235,20 @@ public class ManageClientsForm extends javax.swing.JFrame {
     private void ButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEditActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ButtonEditActionPerformed
+
+    private void ButtonADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonADDActionPerformed
+        // TODO add your handling code here:
+        String fname = jTextFieldFNAME.getText();
+        String lname = jTextFieldLNAME.getText();
+        String phone = jTextFieldPhone.getText();
+        String email = jTextFieldEmail.getText();
+        
+        if(client.addClient(fname, lname, phone, email)){
+            System.out.println("YES");
+        }else{
+            System.out.println("NOO");
+        }
+    }//GEN-LAST:event_ButtonADDActionPerformed
 
     /**
      * @param args the command line arguments
