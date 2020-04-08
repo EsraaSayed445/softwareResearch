@@ -1,6 +1,7 @@
 package javahotelsystem;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,6 +16,7 @@ public class ManageClientsForm extends javax.swing.JFrame {
     public ManageClientsForm() {
         initComponents();
         
+        //populate the table
         client.fillClientJTable(jTable1);
     }
 
@@ -46,7 +48,7 @@ public class ManageClientsForm extends javax.swing.JFrame {
         ButtonRemove = new javax.swing.JButton();
         ButtonEdit = new javax.swing.JButton();
         ButtonClear = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jButtonRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -131,6 +133,11 @@ public class ManageClientsForm extends javax.swing.JFrame {
     ButtonRemove.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     ButtonRemove.setForeground(new java.awt.Color(255, 255, 255));
     ButtonRemove.setText("Remove");
+    ButtonRemove.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            ButtonRemoveActionPerformed(evt);
+        }
+    });
 
     ButtonEdit.setBackground(new java.awt.Color(204, 0, 51));
     ButtonEdit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -146,11 +153,16 @@ public class ManageClientsForm extends javax.swing.JFrame {
     ButtonClear.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
     ButtonClear.setForeground(new java.awt.Color(255, 255, 255));
     ButtonClear.setText("Clear Fields");
-
-    jButton1.setText("Refresh");
-    jButton1.addActionListener(new java.awt.event.ActionListener() {
+    ButtonClear.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            jButton1ActionPerformed(evt);
+            ButtonClearActionPerformed(evt);
+        }
+    });
+
+    jButtonRefresh.setText("Refresh");
+    jButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButtonRefreshActionPerformed(evt);
         }
     });
 
@@ -188,7 +200,7 @@ public class ManageClientsForm extends javax.swing.JFrame {
                             .addComponent(ButtonRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE))
             .addGap(26, 26, 26))
     );
@@ -227,7 +239,7 @@ public class ManageClientsForm extends javax.swing.JFrame {
                     .addComponent(ButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(18, 18, 18)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+            .addComponent(jButtonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
             .addContainerGap())
     );
 
@@ -247,6 +259,30 @@ public class ManageClientsForm extends javax.swing.JFrame {
 
     private void ButtonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEditActionPerformed
         // TODO add your handling code here:
+        int id =0;
+        String fname = jTextFieldFNAME.getText();
+        String lname = jTextFieldLNAME.getText();
+        String phone = jTextFieldPhone.getText();
+        String email = jTextFieldEmail.getText();
+        
+        if(fname.trim().equals("") || lname.trim().equals("") || phone.trim().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Fill The Fields please", "Empty Field Error",JOptionPane.WARNING_MESSAGE );
+        }else{
+            try{
+            id = Integer.valueOf(TextFieldID.getText());
+            if(client.editClient(id, fname, lname, phone, email)){
+            JOptionPane.showMessageDialog(rootPane, "client data updated successfully", "Add client",JOptionPane.INFORMATION_MESSAGE );
+            }else{
+            JOptionPane.showMessageDialog(rootPane, "Client Data Not Updated", "Add client Error",JOptionPane.ERROR_MESSAGE );
+             }
+            }catch(NumberFormatException ex){
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Enter the Client ID", "client ID Error",JOptionPane.ERROR_MESSAGE );
+            }
+            
+            
+        }
+        
+        
     }//GEN-LAST:event_ButtonEditActionPerformed
 
     private void ButtonADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonADDActionPerformed
@@ -270,9 +306,37 @@ public class ManageClientsForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_ButtonADDActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        //clear the table first
+        jTable1.setModel(new DefaultTableModel(null, new Object[]{"ID","Frist Name","Last Name","Phone","Email"}));
+        //populate the table
+        client.fillClientJTable(jTable1);
+
+    }//GEN-LAST:event_jButtonRefreshActionPerformed
+
+    private void ButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonClearActionPerformed
+        // remove text from all fields
+        jTextFieldFNAME.setText("");
+        jTextFieldLNAME.setText("");
+        jTextFieldPhone.setText("");
+        jTextFieldEmail.setText("");
+        
+    }//GEN-LAST:event_ButtonClearActionPerformed
+
+    private void ButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonRemoveActionPerformed
+        // delete a client:
+        try{
+            int id = Integer.valueOf(TextFieldID.getText());
+            if(client.removeClient(id)){
+            JOptionPane.showMessageDialog(rootPane, "client data removed successfully", "Remove client",JOptionPane.INFORMATION_MESSAGE );
+            }else{
+            JOptionPane.showMessageDialog(rootPane, "Client Data Not removed", "Remove client Error",JOptionPane.ERROR_MESSAGE );
+             }
+            }catch(NumberFormatException ex){
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage() + " - Enter the Client ID", "client ID Error",JOptionPane.ERROR_MESSAGE );
+            }
+    }//GEN-LAST:event_ButtonRemoveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,7 +379,7 @@ public class ManageClientsForm extends javax.swing.JFrame {
     private javax.swing.JButton ButtonEdit;
     private javax.swing.JButton ButtonRemove;
     private javax.swing.JTextField TextFieldID;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonRefresh;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

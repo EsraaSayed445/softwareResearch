@@ -29,7 +29,6 @@ public class Client {
         
         
         PreparedStatement st;
-        ResultSet rs;
         String addQuery = "INSERT INTO `clients`(`first_name`, `last_name`, `phone`, `email`) VALUES (?,?,?,?)";
         
         try {
@@ -39,11 +38,10 @@ public class Client {
             st.setString(2,lname);
             st.setString(3,phone);
             st.setString(4,email);
-            if(st.executeUpdate()>0){
-                return true;
-            }else{
-                return false;
-            }
+            
+                return (st.executeUpdate()>0);
+            
+             
         } catch (SQLException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -51,7 +49,49 @@ public class Client {
         
         
     }
+//function to edit the selected client
+    public boolean editClient(int id,String fname, String lname, String phone, String email){
+        
+        PreparedStatement st;
+        String editQuery = "UPDATE `clients` SET `first_name`=?,`last_name`=?,`phone`=?,`email`=? WHERE `id`=?";
+        
+        try {
+            st = my_connection.createConnection().prepareStatement(editQuery);
+            
+            st.setString(1,fname);
+            st.setString(2,lname);
+            st.setString(3,phone);
+            st.setString(4,email);
+            st.setInt(5,id);
+            
+            return (st.executeUpdate()>0);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
     
+    //function to remove the selected clients
+    public boolean removeClient(int id){
+        PreparedStatement st;
+        String deleteQuery = "DELETE FROM `clients` WHERE `id`=?";
+        
+        try {
+            st = my_connection.createConnection().prepareStatement(deleteQuery);
+            
+            
+            st.setInt(1,id);
+            
+            return (st.executeUpdate()>0);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    //function to fill the table with the clients in the DATABASE
     public void fillClientJTable(JTable table) {
         PreparedStatement ps;
         ResultSet rs;
