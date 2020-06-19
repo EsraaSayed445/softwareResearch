@@ -148,7 +148,7 @@ public class ROOMS {
         
     }
      
- //function to remove the selected clients
+ //function to remove the selected Room
     public boolean removeRoom(int roomNumber){
         PreparedStatement st;
         String deleteQuery = "DELETE FROM `clients` WHERE `r_number`=?";
@@ -166,5 +166,54 @@ public class ROOMS {
             return false;
         }
     }
+    //fun to get set a room reserved or not
+    public boolean setRoomToReserved(int number,String isReserved){
+        
+        PreparedStatement st;
+        String addQuery = "UPDATE `room` SET `reserved`=? WHERE `r_number`=?";
+        try {
+            st = my_connection.createConnection().prepareStatement(addQuery);
+            
+            st.setString(3,isReserved);
+            st.setInt(4,number);            
+                return (st.executeUpdate()>0);
+            
+             
+        } catch (SQLException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        
+        
+    }
+     //function to check if the room is already reserved
+    public String isRoomReserved(int number){
+        
+        PreparedStatement st;
+        ResultSet rs;
+        String addQuery = "SELECT `reserved` FROM `room` WHERE `r_number`=?";
+        try {
+            
+            st = my_connection.createConnection().prepareStatement(addQuery);
+            
+            st.setInt(1,number);
+            
+            rs = st.executeQuery();
+            
+            if(rs.next()){
+                return rs.getString(1);
+            }else{
+                return "";
+            }
+             
+        } catch (SQLException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
+        
+        
+    }
+     
+    
     
 }
